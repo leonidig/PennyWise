@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { getCSRFToken } from '../utils/csrf'
+
 
 
 export const useAuthStore = defineStore('auth', {
@@ -9,30 +11,44 @@ export const useAuthStore = defineStore('auth', {
         refreshInterval:null
     }),
     actions:{
+        saveTokens(data) {
+            this.access = data.access
+            this.refresh = data.refresh
+            localStorage.setItem('access', data.access)
+            localStorage.setItem('refresh', data.refresh)
+        },
+
         async login(email, password) {
+            const csrf = getCSRFToken()
+
             const res = await fetch('http://localhost:8000/api/token', {
                 method: 'POST',
-                headers : {'Content-Type': 'application/json'},
+                credentials: 'include',
+                headers : {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf,
+                },
                 body : JSON.stringify({email, password}),
             })
 
             if (!res.ok) throw new Error('Login failed')
             const data = await res.json()
-            
-            this.access = data.access
-            this.refresh = data.refresh
-            localStorage.setItem('access', data.access)
-            localStorage.setItem('refresh', data.refresh)
+            this.saveTokens(data)
 
             await this.getUser()
             this.startRefreshLoop()
         },
 
-        async register(email, passeord) {
+        async register(email, password, confirmPassword) {
+            const csrf = getCSRFToken()
             const res = await fetch('http://localhost:8000/api/register', {
                 mehtod: 'POST',
-                headers : {'Content-Type': 'application/json'},
-                body : JSON.stringify({email, password}),
+                credentials: 'include',
+                headers : {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf,
+                },
+                body : JSON.stringify({email, password, confirm_password: confirmPassword}),
             
             })
             if (!res.ok) throw new Error('Registration failed')
