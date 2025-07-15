@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', {
         async login(email, password) {
             const csrf = getCSRFToken()
 
-            const res = await fetch('http://localhost:8000/api/token', {
+            const res = await fetch('http://localhost:8000/api/login', {
                 method: 'POST',
                 credentials: 'include',
                 headers : {
@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('auth', {
                     'X-CSRFToken': csrf,
                 },
                 body : JSON.stringify({email, password, confirm_password: confirmPassword}),
-            
+
             })
             if (!res.ok) throw new Error('Registration failed')
         },
@@ -60,7 +60,7 @@ export const useAuthStore = defineStore('auth', {
                     Authorization: `Bearer ${this.access}`
                 }
             })
-            
+
             if (res.ok) {
                 this.user = await res.json()
             } else {
@@ -84,7 +84,7 @@ export const useAuthStore = defineStore('auth', {
             if (this.refreshInterval) clearInterval(this.refreshInterval)
             this.refreshInterval = setInterval(() => {
                 if (this.refresh) this.refreshToken()
-            }, 1000 * 60 * 5) 
+            }, 1000 * 60 * 5)
         },
 
         logout() {
