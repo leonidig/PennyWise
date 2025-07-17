@@ -1,26 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.js'
+
+import Home from '@/views/Home.vue'
+import Login from '@/views/Login.vue'
+import Register from '@/views/Register.vue'
 
 const routes = [
-    {
-        path: "/",
-        name: 'Home',
-        component: () => import('@/views/Home.vue'),
-        meta : {
-            requiresAuth: true
-        }
-    },
-
-    {
-        path: "/login",
-        name: "Login",
-        component: () => import('@/views/Login.vue'),
-    },
-
-    {
-        path: "/register",
-        name: "Register",
-        component: () => import('@/views/Login.vue'),
-    },
+    { path: "/", name: 'Home', component: Home, meta : {requiresAuth: true} },
+    { path: "/login", name: "Login", component: Login },
+    { path: "/register", name: "Register", component: Register },
 ]
 
 const router = createRouter({

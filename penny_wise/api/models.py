@@ -53,18 +53,6 @@ class Category(models.Model):
         return self.name
     
     
-class Transaction(models.Model):
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE,
-        related_name='transactions'
-    )
-    ammount = models.IntegerField()
-    comment = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.ammount} - {self.category.name}"
     
 
 class Currency(models.Model):
@@ -77,11 +65,10 @@ class Currency(models.Model):
 
 class Wallet(models.Model):
     balance = models.DecimalField(max_digits=12, decimal_places=2)
-    currency = models.CharField(max_length=10)
-    transactions = models.ForeignKey(
-        Transaction,
+    currency = models.ForeignKey(
+        Currency,
         on_delete=models.CASCADE,
-        related_name="transactions"
+        related_name='wallet'
     )
     user = models.ForeignKey(
         User,
@@ -90,4 +77,24 @@ class Wallet(models.Model):
     )
 
     def __str__(self):
-        return f"Wallet {self.user.email} [{self.currency.code if self.currency else "No Currency"}]"
+        return f"Wallet {self.user.email} [{self.currency}]"
+
+
+
+class Transaction(models.Model):
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name='transactions'
+    )
+    wallet = models.ForeignKey(
+        Wallet,
+        on_delete=models.CASCADE,
+        related_name='transactions'
+    )
+    amount = models.IntegerField()
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.amount} - {self.category.name}"

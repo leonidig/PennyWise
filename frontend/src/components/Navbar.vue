@@ -1,42 +1,28 @@
 <template>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<div>
+  <b-navbar toggleable="lg" type="dark" variant="info">
+    <b-navbar-brand href="#">PennyWise</b-navbar-brand>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Balances <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Transactions <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Transactions <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Expenses <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Goals <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Profile
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Profile</a>=
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Log Out</a>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+    <b-collapse id="nav-collapse" is-nav>
+      <b-navbar-nav>
+        <b-nav-item href="#">Home</b-nav-item>
+      </b-navbar-nav>
+
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+
+        <b-nav-item-dropdown right>
+          <!-- Using 'button-content' slot -->
+          <template #button-content>
+            <em>User</em>
+          </template>
+          <b-dropdown-item href="#">Profile</b-dropdown-item>
+          <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
+</div>
 </template>
-

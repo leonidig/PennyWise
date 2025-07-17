@@ -6,7 +6,7 @@ from api.views.currency_viewset import CurrencyViewSet
 from api.views.wallet_viewset import WalletViewSet
 from api.views.transaction_viewset import TransactionViewSet
 from api.views.user_viewset import LoginView, RegisterView
-from api.views.csrf import CSRF
+from api.views.csrf import Csrf
 
 router = DefaultRouter()
 
@@ -19,5 +19,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
-    path('csrf/', CSRF.as_view(), name='csrf'),
+    path('csrf/', Csrf.as_view(), name='csrf'),
 ]

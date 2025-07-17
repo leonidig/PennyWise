@@ -11,6 +11,11 @@ from drf_spectacular.utils import extend_schema_view, extend_schema
     partial_update=extend_schema(tags=['Wallet']),
     destroy=extend_schema(tags=['Wallet']),
 )
+
+
 class WalletViewSet(viewsets.ModelViewSet):
     queryset = Wallet.objects.all()
     serializer_class = WalletSerializer
+
+    def get_queryset(self):
+        return Wallet.objects.filter(user=self.request.user)

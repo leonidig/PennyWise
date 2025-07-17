@@ -9,10 +9,6 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 
 
-
-
-
-
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
     return {

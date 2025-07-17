@@ -7,7 +7,7 @@ from rest_framework.views import APIView
     tags=['CSRF'],
     responses={200: OpenApiResponse(description='CSRF cookie set')}
 )
-class CSRF(APIView):
+class Csrf(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         return Response({'detail': 'CSRF cookie set'})
