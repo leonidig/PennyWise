@@ -1,17 +1,19 @@
 <script setup>
-import Navbar from './components/Navbar.vue'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import ItemCarousel from '@/components/ItemCarousel.vue'
+import Navbar from '@/components/Navbar.vue'
+
+const router = useRouter()
+const auth = useAuthStore()
 </script>
 
 <template>
-  <div>
-    <h1>Привет, Vue 3 + Vite!</h1>
-    <Navbar />
-  </div>
+<Navbar />
+<router-view />
 </template>
 
 <style>
-h1 {
-  color: #42b883;
-  font-family: Arial, sans-serif;
-}
+
 </style>

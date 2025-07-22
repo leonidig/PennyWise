@@ -1,11 +1,11 @@
 <script setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   items: {
     type: Array,
     required: true
-  },
+  }
 })
 
 const currentIndex = ref(0)
@@ -21,34 +21,30 @@ function prevItem() {
     currentIndex.value--
   }
 }
-
 </script>
 
-
-
-
 <template>
-  <div class="p-4 broder rounded shadow w-full max-w-md">
-    <RouterLink to="/">Accounts</RouterLink>  <!-- Implement Accounts Route -->
-    <h1 class="text-2xl font-bold mb-4">Total Balance</h1>
-    <div class="mb-4 text center">
-      <slot :item="items[currentIndex][name]"></slot>
-      <slot :item="items[currentIndex][type]"></slot>
-      <slot :item="items[currentIndex][number]"></slot>
-      <slot :item="items[currentIndex][balance]"></slot>
+  <div class="p-4 border rounded shadow w-full max-w-md">
+    <RouterLink to="/" class="text-blue-600 underline">Wallets</RouterLink>
+
+    <div class="mb-4 text-center">
+      <slot :item="items[currentIndex]"></slot>
     </div>
+
     <div class="flex justify-between items-center">
-      <button @click="prevItem" class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50" :disabled="currentIndex === 0">
+      <button @click="prevItem" :disabled="currentIndex === 0"
+              class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
         Previous
       </button>
+
       <span class="text-sm text-gray-600">
         Page {{ currentIndex + 1 }} of {{ items.length }}
       </span>
-      <button @click="nextItem" class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50" :disabled="currentIndex === items.length - 1">
+
+      <button @click="nextItem" :disabled="currentIndex === items.length - 1"
+              class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
         Next
       </button>
     </div>
   </div>
 </template>
-
-

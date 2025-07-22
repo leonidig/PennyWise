@@ -8,12 +8,4 @@ def super_user(db):
 
 @pytest.fixture
 def api_client():
-    return APIClient()
-12333',
-    )
-    return user
-
-
-@pytest.fixture
-def api_client():
-    return APIClient()
+    return APIClient() 
