@@ -1,6 +1,6 @@
 import pytest
 from django.urls import reverse
-from penny_wise.api.models import Category
+from api.models import Category
 
 
 @pytest.mark.django_db

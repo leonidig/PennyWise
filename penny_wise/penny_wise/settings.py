@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework_simplejwt',
     'corsheaders',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -142,15 +143,14 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    "DEFAULT_PERMISSION_CLASSES": [ 
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly"
-    ],
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.OrderingFilter",
         "rest_framework.filters.SearchFilter",
     ],
 }
+
+
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Penny_Wise_API",
@@ -166,3 +166,16 @@ SIMPLE_JWT = {
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 CORS_ALLOW_CREDENTIALS = True
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT Authorization header. Example: "Bearer {token}"',
+        }
+    },
+    'USE_SESSION_AUTH': False,
+}

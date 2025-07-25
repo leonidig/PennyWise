@@ -12,8 +12,8 @@ export const useAuthStore = defineStore('auth', {
     }),
     actions:{
         saveTokens(data) {
-            this.access = data.access
-            this.refresh = data.refresh
+            this.access = data.tokens.access
+            this.refresh = data.tokens.refresh
             localStorage.setItem('access', data.access)
             localStorage.setItem('refresh', data.refresh)
         },
@@ -35,7 +35,6 @@ export const useAuthStore = defineStore('auth', {
             const data = await res.json()
             this.saveTokens(data)
 
-            await this.getUser()
             this.startRefreshLoop()
         },
 
@@ -52,20 +51,6 @@ export const useAuthStore = defineStore('auth', {
 
             })
             if (!res.ok) throw new Error('Registration failed')
-        },
-
-        async getUser() {
-            const res = await fetch('http://localhost:8000/api/user', {
-                headers : {
-                    Authorization: `Bearer ${this.access}`
-                }
-            })
-
-            if (res.ok) {
-                this.user = await res.json()
-            } else {
-                this.logout()
-            }
         },
 
         async refreshToken() {

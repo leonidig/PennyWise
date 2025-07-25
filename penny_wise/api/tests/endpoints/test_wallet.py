@@ -1,5 +1,5 @@
 import pytest
-from ..models import User, Currency, Wallet
+from api.models import User, Currency, Wallet
 from django.urls import reverse
 
 @pytest.mark.django_db

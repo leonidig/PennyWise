@@ -1,6 +1,6 @@
 import pytest
-from ..models import Category, User
-from ..serializers.category_serializer import CategorySerializer
+from api.models import Category, User
+from api.serializers.category_serializer import CategorySerializer
 
 @pytest.mark.django_db
 def test_category_serializer_valid():

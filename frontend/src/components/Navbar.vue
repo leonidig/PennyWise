@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar">
+  <nav class="avbar navbar-expand-lg navbar-light bg-dark">
     <div class="navbar-brand">
       <router-link to="/" class="brand-link">PennyWise</router-link>
       <button class="toggle-btn" @click="isOpen = !isOpen" aria-label="Toggle menu">
@@ -51,7 +51,7 @@ function signOut() {
 
 <style scoped>
 .navbar {
-  background-color: #17a2b8;
+  background-color: #006315f2;
   color: white;
   padding: 0.5rem 1rem;
   display: flex;
@@ -172,7 +172,7 @@ function signOut() {
   .dropdown-menu {
     position: static;
     box-shadow: none;
-    background: #f9f9f9;
+    background: #424242ff;
     margin: 0;
   }
 }

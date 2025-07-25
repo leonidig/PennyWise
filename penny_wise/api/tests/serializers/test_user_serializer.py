@@ -1,6 +1,6 @@
 import pytest
-from ..models import User
-from ..serializers.user_serializer import UserSerializer
+from api.models import User
+from api.serializers.user_serializer import UserSerializer
 
 @pytest.mark.django_db
 def test_user_serializer_valid():

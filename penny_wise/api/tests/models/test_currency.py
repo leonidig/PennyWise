@@ -1,5 +1,5 @@
 import pytest
-from penny_wise.api.models import Currency
+from api.models import Currency
 from django.urls import reverse
 
 @pytest.mark.django_db

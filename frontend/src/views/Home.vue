@@ -2,30 +2,35 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useWalletStore } from '@/stores/wallets'
 import ItemCarousel from '@/components/ItemCarousel.vue'
 import Navbar from '@/components/Navbar.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
+const wallets = useWalletStore
 
 const balances  = ref([])
 const loading = ref(true)
-const currenciesUsed = ['EUR', 'USD', 'BTC', 'UAH']
+const currencyCodes = ref([])
 const exchangeRates = ref({})
 
 
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/wallets/')
-    if (!response.ok) throw new Error('Failed to fetch')
-    balances.value = await response.json()
+    wallets.fetchWallets()
+    wallets.fetchCurrencies()
+
+    balances.value = wallets.balances
+    currencyCodes.value = wallets.currencies
+
     const rateRes = await fetch(
       `https://api.exchangerate.host/latest?base=EUR&symbols=${currenciesUsed.join(',')}`
     )
     const rateData = await rateRes.json()
 
-    // Invert rates so you can convert from wallet currency → EUR
+
     for (const [currency, rate] of Object.entries(rateData.rates)) {
       exchangeRates.value[currency] = currency === 'EUR' ? 1 : 1 / rate
     }
@@ -55,7 +60,7 @@ const totalNetWorthEUR = computed(() => {
 
 <template>
 <h1>Welcome!</h1>
-<h3>Total Net Worth: €{{ totalNetWorthEUR.toFixed(2) }}  EUR</h3>
+<h3>Total Balance Worth: €{{ totalNetWorthEUR.toFixed(2) }}  EUR</h3>
 <h4>Your Balances</h4>
 <h5 v-if="loading">Loading Balances...</h5>
 <ItemCarousel :items="balances">
@@ -66,4 +71,7 @@ const totalNetWorthEUR = computed(() => {
     </div>
   </template>
 </ItemCarousel>
+
+<h3>Recent Transactions</h3>
+
 </template>

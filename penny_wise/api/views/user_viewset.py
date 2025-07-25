@@ -5,8 +5,8 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from ..serializers import RegisterSerializer, LoginSerializer
 from ..models import User
-from drf_spectacular.utils import extend_schema, OpenApiResponse
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 def get_tokens_for_user(user):
@@ -17,14 +17,13 @@ def get_tokens_for_user(user):
     }
 
 
-@extend_schema(
-    tags=['Authentication'],
-    request=RegisterSerializer,
-    responses={201: OpenApiResponse(description='User registered successfully')}
-)
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        request_body=RegisterSerializer,
+        responses={201: openapi.Response('User registered', RegisterSerializer)}
+    )
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -36,14 +35,13 @@ class RegisterView(APIView):
         }, status=status.HTTP_201_CREATED)
 
 
-@extend_schema(
-    tags=['Authentication'],
-    request=LoginSerializer,
-    responses={200: OpenApiResponse(description='User logged in successfully with JWT tokens')}
-)
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        request_body=LoginSerializer,
+        responses={200: openapi.Response('User logged in', LoginSerializer)}
+    )
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

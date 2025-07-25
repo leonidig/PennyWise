@@ -1,5 +1,6 @@
 import pytest
-from penny_wise.api.models import User
+from api.models import User
+
 
 @pytest.mark.django_db
 def test_user_create():
@@ -8,6 +9,7 @@ def test_user_create():
     assert user.check_password("testpass")
     assert not user.is_staff
     assert not user.is_superuser
+
 
 @pytest.mark.django_db
 def test_superuser_create():

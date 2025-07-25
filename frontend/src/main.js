@@ -31,6 +31,9 @@ async function initApp() {
       auth.startRefreshLoop()
     }
 
+    const { useWalletStore } = await import('./stores/wallets.js')
+    const wallets = useWalletStore()
+
   } catch (error) {
     console.error('App initialization failed:', error.message)
   }

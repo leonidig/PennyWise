@@ -1,6 +1,6 @@
 import pytest
 from django.urls import reverse
-from ..models import Category
+from api.models import Category
 
 @pytest.mark.django_db
 def test_category_list_api(api_client, super_user):
