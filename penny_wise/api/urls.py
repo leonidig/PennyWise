@@ -7,7 +7,7 @@ from api.views.category_viewset import CategoryViewSet
 from api.views.currency_viewset import CurrencyViewSet
 from api.views.wallet_viewset import WalletViewSet
 from api.views.transaction_viewset import TransactionViewSet
-from api.views.user_viewset import LoginView, RegisterView
+from api.views.user_viewset import LoginView, RegisterView, UserView
 from api.views.csrf import Csrf
 
 router = DefaultRouter()
@@ -23,4 +23,5 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('csrf/', Csrf.as_view(), name='csrf'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('user/', UserView.as_view(), name='user_detail'),
 ]

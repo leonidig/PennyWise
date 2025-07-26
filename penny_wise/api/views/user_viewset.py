@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from ..serializers import RegisterSerializer, LoginSerializer
+from ..serializers.user_serializer import RegisterSerializer, LoginSerializer, UserSerializer
 from ..models import User
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -62,3 +62,18 @@ class LoginView(APIView):
             'detail': 'User logged in successfully',
             'tokens': tokens
         })
+
+
+class UserView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: openapi.Response('User details', UserSerializer)}
+    )
+    def get(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

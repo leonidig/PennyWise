@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     is_income = models.BooleanField()
     user = models.ForeignKey(
         User,
@@ -64,6 +64,7 @@ class Currency(models.Model):
 
 
 class Wallet(models.Model):
+    name = models.CharField(max_length=255, default='Wallet')
     balance = models.DecimalField(max_digits=12, decimal_places=2)
     currency = models.ForeignKey(
         Currency,
@@ -75,6 +76,11 @@ class Wallet(models.Model):
         on_delete=models.CASCADE,
         related_name="wallets"
     )
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'currency'], name='unique_wallet_name_currency'),
+        ]
 
     def __str__(self):
         return f"Wallet {self.user.email} [{self.currency}]"

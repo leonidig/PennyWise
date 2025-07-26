@@ -1,19 +1,19 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import ItemCarousel from '@/components/ItemCarousel.vue'
-import Navbar from '@/components/Navbar.vue'
+import Navbar from '@/components/NavbarComp.vue'
+import { useRoute } from 'vue-router'
 
-const router = useRouter()
-const auth = useAuthStore()
+const route = useRoute()
+
+const hideNavbarOn = ['/login', '/register']
+
 </script>
 
 <template>
-<Navbar />
-<router-view />
+  <Navbar v-if="!hideNavbarOn.includes(route.path)" />
+  <router-view />
 </template>
 
 <style>
+
 
 </style>

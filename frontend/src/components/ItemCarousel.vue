@@ -1,5 +1,12 @@
 <script setup>
 import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import { useWalletStore } from '@/stores/wallets'
+
+const wallets = useWalletStore()
+wallets.fetchCurrencies()
+
+const currencies = wallets.currencies
 
 const props = defineProps({
   items: {
@@ -27,11 +34,19 @@ function prevItem() {
   <div class="p-4 border rounded shadow w-full max-w-md">
     <RouterLink to="/" class="text-blue-600 underline">Wallets</RouterLink>
 
-    <div class="mb-4 text-center">
-      <slot :item="items[currentIndex]"></slot>
+    <div v-if="items.length > 0 && items[currentIndex]" class="mb-4 text-center">
+      <p><strong>Name:</strong> {{ items[currentIndex].name }}</p>
+      <p><strong>Balance:</strong>
+        {{ items[currentIndex].balance }}
+        {{ currencies.find(i => i.id === items[currentIndex].currency).code }}
+      </p>
     </div>
 
-    <div class="flex justify-between items-center">
+    <div v-else class="mb-4 text-center text-gray-500">
+      No wallets available.
+    </div>
+
+    <div class="flex justify-between items-center" v-if="items.length > 0">
       <button @click="prevItem" :disabled="currentIndex === 0"
               class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
         Previous
@@ -48,3 +63,4 @@ function prevItem() {
     </div>
   </div>
 </template>
+

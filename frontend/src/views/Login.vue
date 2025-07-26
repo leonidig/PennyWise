@@ -14,7 +14,7 @@ async function handleLogin() {
     error.value = ''
     try {
         await auth.login(email.value, password.value)
-        router.push('/home')
+        router.push('/')
     } catch (err) {
         error.value = err.message
     }

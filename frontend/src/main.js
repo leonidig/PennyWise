@@ -33,6 +33,16 @@ async function initApp() {
 
     const { useWalletStore } = await import('./stores/wallets.js')
     const wallets = useWalletStore()
+    wallets.fetchWallets()
+    wallets.fetchCurrencies()
+
+    const { useCategoryStore } = await import('./stores/categories.js')
+    const categories = useCategoryStore()
+    categories.fetchCategories()
+
+    const { useTransactionStore } = await import('./stores/transactions.js')
+    const transactions = useTransactionStore()
+    transactions.fetchTransactions()
 
   } catch (error) {
     console.error('App initialization failed:', error.message)
