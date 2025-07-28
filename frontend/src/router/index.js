@@ -26,7 +26,7 @@ const routes = [
     { path: "/wallets/:id", name: "WalletInfo", component: WalletInfo, meta : {requiresAuth: true} },
     { path: "/transactions/:id", name: "TransactionInfo", component: TransactionInfo, meta : {requiresAuth: true} },
     { path: "/profile", name: "Profile", component: Profile, meta : {requiresAuth: true} },
-    { path: "/wallets/:id/edit", name: "EditWallet", component: EditWallet, meta : {requiresAuth: true} },
+    { path: "/wallets/edit/:id", name: "EditWallet", component: EditWallet, meta : {requiresAuth: true} },
     { path: "/transactions/:id/edit", name: "EditTransaction", component: EditTransactions, meta : {requiresAuth: true} },
     { path: "/wallets/add", name: "AddWallet", component: AddWallet, meta : {requiresAuth: true} },
     { path: "/transactions/add", name: "AddTransaction", component: AddTransaction, meta : {requiresAuth: true} },

@@ -27,6 +27,8 @@ const balances = wallets.balances
         <h2>{{ wallet.name }}</h2>
         <p>Balance: {{ wallet.balance }} {{ currencies.find(c => c.id === wallet.currency).code }}</p>
         <button @click="router.push(`/wallets/${wallet.id}`)">View Details</button>
+        <button @click="router.push(`/wallets/edit/${wallet.id}`)">Edit</button>
+        <button @click="wallets.deleteWallet(wallet.id)">Delete</button>
       </div>
     </div>
     <button @click="router.push('/wallets/add')">Add New Wallet</button>

@@ -32,7 +32,7 @@ function prevItem() {
 
 <template>
   <div class="p-4 border rounded shadow w-full max-w-md">
-    <RouterLink to="/" class="text-blue-600 underline">Wallets</RouterLink>
+    <RouterLink to="/wallets" class="text-blue-600 underline">Wallets</RouterLink>
 
     <div v-if="items.length > 0 && items[currentIndex]" class="mb-4 text-center">
       <p><strong>Name:</strong> {{ items[currentIndex].name }}</p>

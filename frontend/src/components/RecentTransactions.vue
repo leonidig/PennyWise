@@ -59,7 +59,7 @@ const getCurrencyCode = (walletId) => {
 }
 
 const getCategory = (categoryId) => {
-  return categories.value?.find(c => c.id === categoryId)
+  return categories.value?.find(c => c.id == categoryId)
 }
 
 
@@ -83,11 +83,13 @@ console.log('Filtered Items:', filteredItems.value)
           <p :style="{ color: getCategory(item.category)?.is_income ? 'green' : 'red' }">
               {{ getCategory(item.category)?.name || 'Unknown' }}
           </p>
-          <p class="badge bg-primary rounded-pill">{{ item.amount }} {{ getCurrencyCode(item.wallet) }}</p>
+          <p class="badge bg-primary rounded-pill" :style="{ color: getCategory(item.category)?.is_income ? 'green' : 'red' }">{{ item.amount }} {{ getCurrencyCode(item.wallet) }}</p>
         </div></router-link>
         <small class="text-muted">{{ new Date(item.created_at).toLocaleString('en-US',
         { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}) }}
         </small>
+
+        <p></p>
       </li>
     </ul>
   </div>

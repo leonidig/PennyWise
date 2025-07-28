@@ -18,6 +18,7 @@ const categoryList = categories.categories
         <h2>{{ category.name }}</h2>
         <p>Type: {{ category.is_income ? 'Income' : 'Expense' }}</p>
         <button @click="router.push(`/categories/edit/${category.id}`)">Edit</button>
+        <button @click="categories.deleteCategory(category.id)">Delete</button>
       </div>
     </div>
     <button @click="router.push('/categories/add')">Add New Category</button>

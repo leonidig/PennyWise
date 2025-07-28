@@ -1,14 +1,10 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
 import { useWalletStore } from '@/stores/wallets'
 import ItemCarousel from '@/components/ItemCarousel.vue'
 import { useTransactionStore } from '@/stores/transactions'
 import RecentTransactions from '@/components/RecentTransactions.vue'
 
-const router = useRouter()
-const auth = useAuthStore()
 const wallets = useWalletStore()
 const transactions = useTransactionStore()
 
@@ -34,11 +30,20 @@ onMounted(async () => {
       return
     }
 
-    const currenciesUsed = currencies.value.map(c => c.code).join(',')
-    const rateRes = await fetch(
-      `https://api.exchangerate.host/live?access_key=bcdae7fbdec58e47ad6d16dede76db0c&source=EUR&currencies=${currenciesUsed}`
-    )
-    const rateData = await rateRes.json()
+    // const currenciesUsed = currencies.value.map(c => c.code).join(',')
+    // const rateRes = await fetch(
+    //   `https://api.exchangerate.host/live?access_key=bcdae7fbdec58e47ad6d16dede76db0c&source=EUR&currencies=${currenciesUsed}`
+    // )
+    // const rateData = await rateRes.json()
+
+    const rateData = {
+      success: true,
+      quotes: {
+        'EURUSD': 1.1,
+        'EURBTC': 0.9,
+        'EURUAH': 130.0
+      }
+    }
 
     console.log('Exchange rate response:', rateData)
     console.log('Balances:', balances.value)
