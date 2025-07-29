@@ -1,12 +1,12 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useTransactionStore } from '@/stores/transactions.js'
 import { useWalletStore } from '@/stores/wallets.js'
 import { useCategoryStore } from '@/stores/categories.js'
-import router from '@/router'
 
 const route = useRoute()
+const router = useRouter()
 const transactionId = Number(route.params.id)
 
 const loading = ref(false)
@@ -52,6 +52,8 @@ onMounted(async () => {
   }
 })
 
+const currencies = computed(() => walletStore.currencies)
+
 async function handleSubmit() {
   error.value = null
   success.value = false
@@ -71,22 +73,14 @@ async function handleSubmit() {
       form.categoryId
     )
     success.value = true
+    router.push('/transactions')  // Navigate after successful update
   } catch (e) {
     error.value = e.message || 'Failed to update transaction.'
   } finally {
     loading.value = false
   }
 }
-
-
-const currencies = walletStore.currencies
-
 </script>
-
-
-
-
-
 
 <template>
   <form @submit.prevent="handleSubmit" class="update-transaction-form">
@@ -94,7 +88,7 @@ const currencies = walletStore.currencies
       <label for="wallet">Wallet:</label>
       <select id="wallet" v-model="form.walletId" required>
         <option v-for="wallet in wallets" :key="wallet.id" :value="wallet.id">
-          {{ wallet.name }} ({{ currencies.find(c => c.id == wallet.currency).code }})
+          {{ wallet.name }} ({{ currencies.find(c => c.id === wallet.currency)?.code || 'N/A' }})
         </option>
       </select>
     </div>
@@ -113,7 +107,7 @@ const currencies = walletStore.currencies
       <input
         id="amount"
         type="number"
-        step="1"
+        step="0.01"
         v-model.number="form.amount"
         required
         min="0"
@@ -125,7 +119,7 @@ const currencies = walletStore.currencies
       <textarea id="comment" v-model="form.comment" placeholder="Optional comment"></textarea>
     </div>
 
-    <button type="submit" @click="router.push('/transactions')" :disabled="loading">Update Transaction</button>
+    <button type="submit" :disabled="loading">Update Transaction</button>
 
     <p v-if="error" class="error">{{ error }}</p>
     <p v-if="success" class="success">Transaction updated successfully!</p>
@@ -135,7 +129,51 @@ const currencies = walletStore.currencies
   </p>
 </template>
 
-
-
-
-
+<style scoped>
+.update-transaction-form {
+  max-width: 480px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+.update-transaction-form div {
+  margin-bottom: 15px;
+}
+.update-transaction-form label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+}
+.update-transaction-form input,
+.update-transaction-form select,
+.update-transaction-form textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid #aaa;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+.update-transaction-form button {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.update-transaction-form button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+.error {
+  color: red;
+  margin-top: 10px;
+}
+.success {
+  color: green;
+  margin-top: 10px;
+}
+</style>

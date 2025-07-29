@@ -1,8 +1,30 @@
+<template>
+  <div class="home-container">
+    <div class="section-card">
+      <h1 class="section-title">Welcome!</h1>
+      <h3 class="section-subtitle">Total Balance Worth</h3>
+      <p class="balance-total">{{ formattedTotalInEUR }} EUR</p>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-subtitle">Your Balances</h3>
+      <div v-if="loading" class="loading-msg">Loading your wallets...</div>
+      <ItemCarousel v-else-if="balances.length" :items="balances" />
+      <div v-else class="no-data-msg">No balances found.</div>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-subtitle">Recent Transactions</h3>
+      <RecentTransactions :items="transactionsList" />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import { useWalletStore } from '@/stores/wallets'
-import ItemCarousel from '@/components/ItemCarousel.vue'
 import { useTransactionStore } from '@/stores/transactions'
+import ItemCarousel from '@/components/ItemCarousel.vue'
 import RecentTransactions from '@/components/RecentTransactions.vue'
 
 const wallets = useWalletStore()
@@ -16,7 +38,6 @@ const loading = ref(true)
 
 onMounted(async () => {
   try {
-
     await wallets.fetchWallets()
     await wallets.fetchCurrencies()
     await transactions.fetchTransactions()
@@ -45,17 +66,10 @@ onMounted(async () => {
       }
     }
 
-    console.log('Exchange rate response:', rateData)
-    console.log('Balances:', balances.value)
-    console.log('Currencies:', currencies.value)
-
-
     for (const [key, value] of Object.entries(rateData.quotes)) {
       const currency = key.replace('EUR', '')
       inverseRates.value[currency] = 1 / value
     }
-    console.log('Inverse Rates:', inverseRates.value)
-
   } catch (error) {
     console.error('Error loading data:', error)
   } finally {
@@ -63,7 +77,6 @@ onMounted(async () => {
   }
 })
 
-// Compute total in EUR
 const totalInEUR = computed(() => {
   if (!balances.value.length || !Object.keys(inverseRates.value).length) return 0
 
@@ -85,11 +98,8 @@ const totalInEUR = computed(() => {
   }, 0)
 })
 
-
-
 const formattedTotalInEUR = computed(() => {
   const total = totalInEUR.value
-  console.log('Total in EUR:', total)
   if (typeof total !== 'number' || isNaN(total)) return '€0.00'
 
   return new Intl.NumberFormat('en-US', {
@@ -97,21 +107,50 @@ const formattedTotalInEUR = computed(() => {
     currency: 'EUR'
   }).format(total)
 })
-
-
-
-
 </script>
 
-<template>
-  <h1>Welcome!</h1>
-  <h3>Total Balance Worth: {{ formattedTotalInEUR }} EUR</h3>
+<style scoped>
+.home-container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 2rem 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: #7F1D1D;
+}
 
-  <h4>Your Balances</h4>
-  <h5 v-if="loading">Loading...</h5>
-  <ItemCarousel v-if="!loading && balances.length" :items="balances" />
-  <h5 v-else>No balances found.</h5>
+.section-card {
+  background: #FEF2F2;
+  border: 2px solid #F87171;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
 
-  <h3>Recent Transactions</h3>
-  <RecentTransactions :items="transactionsList" />
-</template>
+.section-title {
+  font-size: 2rem;
+  color: #DC2626;
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.balance-total {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #7F1D1D;
+}
+
+.loading-msg {
+  color: #DC2626;
+  font-weight: 500;
+}
+
+.no-data-msg {
+  color: #9CA3AF;
+  font-style: italic;
+}
+</style>

@@ -1,5 +1,70 @@
-<script setup>
+<template>
+  <div class="transactions-card" v-if="categories.length && wallets.length && currencies.length">
+    <div class="transactions-header">
+      <button
+        :class="['filter-btn', { active: transaction_type === 'All' }]"
+        @click="transaction_type = 'All'"
+      >All</button>
+      <button
+        :class="['filter-btn', { active: transaction_type === 'Incomes' }]"
+        @click="transaction_type = 'Incomes'"
+      >Incomes</button>
+      <button
+        :class="['filter-btn', { active: transaction_type === 'Expenses' }]"
+        @click="transaction_type = 'Expenses'"
+      >Expenses</button>
+    </div>
 
+    <div class="transactions-body">
+      <ul class="transactions-list">
+        <li
+          v-for="item in filteredItems.slice(0, 10)"
+          :key="item.id"
+          class="transaction-item"
+        >
+          <router-link :to="`/transactions/${item.id}`" class="transaction-link">
+            <div class="transaction-row">
+              <span
+                class="transaction-category"
+                :class="{
+                  income: getCategory(item.category)?.is_income,
+                  expense: !getCategory(item.category)?.is_income
+                }"
+              >
+                {{ getCategory(item.category)?.name || 'Unknown' }}
+              </span>
+
+              <span
+                class="transaction-amount"
+                :class="{
+                  income: getCategory(item.category)?.is_income,
+                  expense: !getCategory(item.category)?.is_income
+                }"
+              >
+                {{ item.amount }} {{ getCurrencyCode(item.wallet) }}
+              </span>
+            </div>
+
+            <small class="transaction-date">
+              {{ new Date(item.created_at).toLocaleString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) }}
+            </small>
+          </router-link>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div v-else>Loading...</div>
+</template>
+
+<script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useCategoryStore } from '@/stores/categories'
 import { useWalletStore } from '@/stores/wallets'
@@ -24,23 +89,16 @@ onMounted(async () => {
   wallets.value = walletStore.balances
   currencies.value = walletStore.currencies
   categories.value = categoryStore.categories
-  console.log('Categories:', categories.value)
 })
-
-
-
-
-
-
 
 const transaction_type = ref('All')
 
-const sortedItems = computed(() => {
-  return [...props.items].sort((a, b) => new Date(b.date) - new Date(a.date))
-})
+const sortedItems = computed(() =>
+  [...props.items].sort((a, b) => new Date(b.date) - new Date(a.date))
+)
 
 const filteredItems = computed(() => {
-  if (categories.value.length === 0) return [] // wait for categories
+  if (categories.value.length === 0) return []
   return sortedItems.value.filter(item => {
     const category = categories.value.find(c => c.id === item.category)
     if (!category) return false
@@ -50,51 +108,100 @@ const filteredItems = computed(() => {
   })
 })
 
-
 const getCurrencyCode = (walletId) => {
   const wallet = wallets.value.find(w => w.id === walletId)
-  if (!wallet) return '???'
+  if (!wallet) return 'Unknown'
   const currency = currencies.value.find(c => c.id === wallet.currency)
-  return currency?.code || '???'
+  return currency?.code || 'Unknown'
 }
 
-const getCategory = (categoryId) => {
-  return categories.value?.find(c => c.id == categoryId)
-}
-
-
-console.log('Filtered Items:', filteredItems.value)
-
-
-
+const getCategory = (categoryId) =>
+  categories.value?.find(c => c.id == categoryId)
 </script>
 
-<template>
-<div class="card" v-if="categories.length && wallets.length && currencies.length">
-  <div class="card-header">
-    <button class="btn btn-primary" @click="transaction_type = 'All' "><h3 class="card-title">Recent Transactions</h3></button>
-    <button class="btn btn-primary" @click="transaction_type = 'Incomes' "><h4 class="card-title">Incomes</h4></button>
-    <button class="btn btn-primary" @click="transaction_type = 'Expenses' "><h4 class="card-title">Expenses</h4></button>
-  </div>
-  <div class="card-body">
-    <ul class="list-group">
-      <li v-for="(item) in filteredItems.slice(0,10)" :key="item.id" class="list-group-item">
-        <router-link :to="`/transactions/${item.id}`"><div class="d-flex justify-content-between align-items-center">
-          <p :style="{ color: getCategory(item.category)?.is_income ? 'green' : 'red' }">
-              {{ getCategory(item.category)?.name || 'Unknown' }}
-          </p>
-          <p class="badge bg-primary rounded-pill" :style="{ color: getCategory(item.category)?.is_income ? 'green' : 'red' }">{{ item.amount }} {{ getCurrencyCode(item.wallet) }}</p>
-        </div></router-link>
-        <small class="text-muted">{{ new Date(item.created_at).toLocaleString('en-US',
-        { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}) }}
-        </small>
+<style>
+.transactions-card {
+  background: #FEF2F2;
+  border: 2px solid #F87171;
+  border-radius: 10px;
+  padding: 1.5rem;
+  max-width: 700px;
+  margin: 2rem auto;
+  color: #7F1D1D;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.1);
+}
 
-        <p></p>
-      </li>
-    </ul>
-  </div>
-</div>
-<div v-else>
-    Loading...
-</div>
-</template>
+.transactions-header {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid #DC2626;
+  background-color: white;
+  color: #DC2626;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: #FECACA;
+}
+
+.filter-btn.active {
+  background-color: #DC2626;
+  color: white;
+}
+
+.transactions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.transaction-item {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #F87171;
+}
+
+.transaction-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.transaction-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-category {
+  font-weight: 600;
+}
+
+.transaction-amount {
+  font-weight: bold;
+}
+
+.transaction-category.income,
+.transaction-amount.income {
+  color: #15803D; /* green-700 */
+}
+
+.transaction-category.expense,
+.transaction-amount.expense {
+  color: #DC2626;
+}
+
+.transaction-date {
+  font-size: 0.8rem;
+  color: #6B7280; /* gray-500 */
+}
+</style>

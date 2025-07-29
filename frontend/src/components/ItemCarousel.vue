@@ -5,7 +5,6 @@ import { useWalletStore } from '@/stores/wallets'
 
 const wallets = useWalletStore()
 wallets.fetchCurrencies()
-
 const currencies = wallets.currencies
 
 const props = defineProps({
@@ -31,36 +30,106 @@ function prevItem() {
 </script>
 
 <template>
-  <div class="p-4 border rounded shadow w-full max-w-md">
-    <RouterLink to="/wallets" class="text-blue-600 underline">Wallets</RouterLink>
+  <div class="wallet-carousel">
+    <RouterLink to="/wallets" class="wallet-link">View All Wallets</RouterLink>
 
-    <div v-if="items.length > 0 && items[currentIndex]" class="mb-4 text-center">
+    <div v-if="items.length > 0 && items[currentIndex]" class="wallet-details">
       <p><strong>Name:</strong> {{ items[currentIndex].name }}</p>
       <p><strong>Balance:</strong>
         {{ items[currentIndex].balance }}
-        {{ currencies.find(i => i.id === items[currentIndex].currency).code }}
+        {{ currencies.find(i => i.id === items[currentIndex].currency)?.code || '' }}
       </p>
     </div>
 
-    <div v-else class="mb-4 text-center text-gray-500">
+    <div v-else class="wallet-empty">
       No wallets available.
     </div>
 
-    <div class="flex justify-between items-center" v-if="items.length > 0">
-      <button @click="prevItem" :disabled="currentIndex === 0"
-              class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
-        Previous
+    <div class="wallet-controls" v-if="items.length > 0">
+      <button @click="prevItem" :disabled="currentIndex === 0" class="nav-btn">
+        ◀ Previous
       </button>
 
-      <span class="text-sm text-gray-600">
-        Page {{ currentIndex + 1 }} of {{ items.length }}
+      <span class="page-indicator">
+        {{ currentIndex + 1 }} / {{ items.length }}
       </span>
 
-      <button @click="nextItem" :disabled="currentIndex === items.length - 1"
-              class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
-        Next
+      <button @click="nextItem" :disabled="currentIndex === items.length - 1" class="nav-btn">
+        Next ▶
       </button>
     </div>
   </div>
 </template>
 
+<style>
+.wallet-carousel {
+  background-color: #FEF2F2;
+  border: 2px solid #F87171;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  color: #7F1D1D;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.wallet-link {
+  display: inline-block;
+  color: #DC2626;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.wallet-link:hover {
+  text-decoration: underline;
+}
+
+.wallet-details {
+  background: white;
+  border: 1px solid #F87171;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.wallet-empty {
+  text-align: center;
+  color: #9CA3AF; /* gray-400 */
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.wallet-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-btn {
+  background-color: #DC2626;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.nav-btn:disabled {
+  background-color: #FECACA; /* red-200 */
+  cursor: not-allowed;
+}
+
+.nav-btn:not(:disabled):hover {
+  background-color: #B91C1C;
+}
+
+.page-indicator {
+  font-size: 0.875rem;
+  color: #7F1D1D;
+}
+</style>
