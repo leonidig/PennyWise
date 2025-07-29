@@ -71,7 +71,7 @@ const deleteTransaction = async (id) => {
     <p v-if="error" class="error">{{ error }}</p>
     <p v-if="loading">Loading transactions...</p>
 
-    <div v-if="!loading && !error" class="transactions-list">
+    <div v-if="!loading && !error" class="transactions-list grid-4-cols">
       <div v-for="transaction in transactionsList" :key="transaction.id" class="transaction-item">
         <router-link :to="`/transactions/${transaction.id}`" class="transaction-link">
           <p :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
@@ -86,7 +86,16 @@ const deleteTransaction = async (id) => {
           ({{ getWallet(transaction.wallet)?.balance ?? '-' }} {{ getCurrencyCode(transaction.wallet) }})
         </h3>
         <p>Comment: {{ transaction.comment || 'No comment' }}</p>
-        <p>Date: {{ new Date(transaction.created_at).toLocaleDateString() }}</p>
+        <p class="transaction-date">
+              {{ new Date(transaction.created_at).toLocaleString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) }}
+            </p>
         <button @click="router.push(`/transactions/${transaction.id}/edit`)">Edit</button>
         <button @click="deleteTransaction(transaction.id)">Delete</button>
       </div>
@@ -96,19 +105,23 @@ const deleteTransaction = async (id) => {
 </template>
 
 <style scoped>
-.transactions-container {
-  max-width: 700px;
-  margin: 20px auto;
-  padding: 15px 20px;
-  font-family: Arial, sans-serif;
+.grid-4-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
 }
 
 .transaction-item {
+  padding: 16px;
   border: 1px solid #ddd;
-  padding: 12px 15px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-  background-color: #fafafa;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.transactions-container {
+  margin: 20px auto;
+  padding: 15px 20px;
+  font-family: Arial, sans-serif;
 }
 
 .transaction-link {

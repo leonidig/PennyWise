@@ -86,7 +86,7 @@ async function confirmAndDeleteTransaction(id) {
     </button>
 
     <h2>Wallet Transactions</h2>
-    <div class="transactions-list">
+    <div class="transactions-list grid-4-cols">
       <div
         v-for="transaction in transactionsList"
         :key="transaction.id"
@@ -129,6 +129,19 @@ async function confirmAndDeleteTransaction(id) {
 </template>
 
 <style scoped>
+.grid-4-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.transaction-item {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
 .wallet-info-container {
   max-width: 600px;
   margin: 2rem auto;
@@ -140,11 +153,6 @@ async function confirmAndDeleteTransaction(id) {
 
 .transactions-list {
   margin-top: 1rem;
-}
-
-.transaction-item {
-  border-bottom: 1px solid #eee;
-  padding: 0.75rem 0;
 }
 
 .transaction-item p {

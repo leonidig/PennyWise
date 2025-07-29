@@ -78,8 +78,15 @@ const deleteTransaction = async (id) => {
 
     <div v-else>
       <h2>Transaction ID: {{ route.params.id }}</h2>
-      <h3>Date: {{ transaction ? new Date(transaction.created_at).toLocaleDateString() : 'Loading...' }}</h3>
-
+      <h3>Date: {{ transaction ? new Date(transaction.created_at).toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) : 'Loading...' }}
+              </h3>
       <h4>Wallet: {{ wallet?.name }} ({{ wallet?.balance }} {{ currency }})</h4>
 
       <div class="transaction-details">

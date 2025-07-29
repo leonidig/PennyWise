@@ -28,14 +28,14 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async fetchUser() {
-          if (!this.accessToken) return
+          if (!this.access) return
 
           try {
-            const res = await fetch('/api/user/', {
+            const res = await fetch('http://localhost:8000/api/user/', {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.accessToken}`,
+                'Authorization': `Bearer ${this.access}`,
               },
             })
 

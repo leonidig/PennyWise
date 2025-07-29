@@ -39,7 +39,7 @@ const confirmAndDeleteWallet = async (id, name) => {
 
     <div v-if="loading">Loading wallets...</div>
 
-    <div v-else class="wallets-list">
+    <div v-else class="wallets-list grid-4-cols">
       <div v-if="wallets.balances.length === 0">No wallets found. Add one!</div>
 
       <div
@@ -75,16 +75,25 @@ const confirmAndDeleteWallet = async (id, name) => {
 </template>
 
 <style scoped>
+.grid-4-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.wallet-item {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
 .wallets-container {
   max-width: 700px;
   margin: 2rem auto;
   padding: 1rem;
 }
 
-.wallet-item {
-  border-bottom: 1px solid #ddd;
-  padding: 1rem 0;
-}
 
 .wallet-item h2 {
   margin: 0 0 0.25rem 0;

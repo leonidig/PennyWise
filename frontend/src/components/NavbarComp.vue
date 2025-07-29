@@ -21,15 +21,7 @@
 
       <ul class="nav-list user-links">
         <li class="dropdown">
-          <button class="dropdown-btn" @click="isDropdownOpen = !isDropdownOpen" :disabled="!auth.email">
-            <template v-if="auth.email">
-              {{ auth.email }} ▾
-            </template>
-            <template v-else>
-              Loading...
-            </template>
-          </button>
-
+          <button class="dropdown-btn" @click="isDropdownOpen = !isDropdownOpen"> {{ auth.email }} ▾</button>
           <ul v-if="isDropdownOpen" class="dropdown-menu">
             <li><router-link to="/profile" @click="closeMenu">Profile</router-link></li>
             <li><a href="#" @click.prevent="signOut">Sign Out</a></li>

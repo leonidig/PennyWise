@@ -38,7 +38,7 @@ onMounted(() => {
 <template>
   <div class="categories-container">
     <h1>Categories</h1>
-    <div v-if="categoryList.length" class="categories-list">
+    <div v-if="categoryList.length" class="categories-list grid-4-cols">
       <div v-for="category in categoryList" :key="category.id" class="category-item">
         <h2>{{ category.name }}</h2>
         <p>Type: {{ category.is_income ? 'Income' : 'Expense' }}</p>
@@ -53,6 +53,19 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.grid-4-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.category-item {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
 .categories-container {
   max-width: 600px;
   margin: 20px auto;
@@ -73,16 +86,6 @@ h1 {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
-}
-
-.category-item {
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 
 .category-item h2 {

@@ -16,8 +16,8 @@
     </div>
 
     <div class="transactions-body">
-      <ul class="transactions-list">
-        <li
+      <div class="transactions-list grid-4-cols">
+        <div
           v-for="item in filteredItems.slice(0, 10)"
           :key="item.id"
           class="transaction-item"
@@ -56,8 +56,8 @@
               }) }}
             </small>
           </router-link>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -120,6 +120,19 @@ const getCategory = (categoryId) =>
 </script>
 
 <style>
+.grid-4-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.transaction-item {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
 .transactions-card {
   background: #FEF2F2;
   border: 2px solid #F87171;
@@ -163,11 +176,6 @@ const getCategory = (categoryId) =>
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.transaction-item {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #F87171;
 }
 
 .transaction-link {
