@@ -89,7 +89,7 @@ const confirmAndDeleteWallet = async (id, name) => {
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .wallets-container {
-  max-width: 700px;
+  max-width: none;
   margin: 2rem auto;
   padding: 1rem;
 }

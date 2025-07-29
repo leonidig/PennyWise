@@ -16,3 +16,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     print(f">>> TRYING TO DELETE CATEGORY {instance.id}: {instance}")
+    #     response = super().destroy(request, *args, **kwargs)
+    #     exists = Category.objects.filter(id=instance.id).exists()
+    #     print(f">>> EXISTS AFTER DELETE? {exists}")
+    #     return response
+

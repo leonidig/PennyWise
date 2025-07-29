@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     is_income = models.BooleanField()
     user = models.ForeignKey(
         User,

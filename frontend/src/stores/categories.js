@@ -55,7 +55,7 @@ export const useCategoryStore = defineStore('categories', {
                 console.error('Error adding category:', error)
             }
         },
-      async updateCategory(name, is_income, id) {
+        async updateCategory(name, is_income, id) {
             try {
                 const token = localStorage.getItem('access')
                 if (!token) throw new Error('No access token found')
@@ -72,6 +72,26 @@ export const useCategoryStore = defineStore('categories', {
             } catch (error) {
                 console.error('Error editing category:', error)
             }
-        }
+        },
+
+        async deleteCategory(id) {
+            try {
+                const token = localStorage.getItem('access')
+                if (!token) throw new Error('No access token found')
+                const res = await fetch(`http://localhost:8000/api/category/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ id }),
+                })
+                if (!res.ok) throw new Error('Failed to delete category')
+                await this.fetchCategories()
+            } catch (error) {
+                console.error('Error editing category', error)
+            }
+        },
+    
     }
 })

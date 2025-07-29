@@ -9,14 +9,13 @@ const hideNavbarOn = ['/login', '/register']
 <template>
   <div class="min-h-screen bg-red-50 text-red-900 font-sans">
     <Navbar v-if="!hideNavbarOn.includes(route.path)" />
-    <main class="px-4 py-6 max-w-4xl mx-auto">
+    <main class="px-4 py-6 w-full">
       <router-view />
     </main>
   </div>
 </template>
 
 <style>
-/* You can move these to main.css or tailwind config if using Tailwind */
 body {
   margin: 0;
   font-family: 'Inter', 'Segoe UI', sans-serif;
@@ -24,7 +23,6 @@ body {
   color: #7F1D1D;
 }
 
-/* Optional: Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }

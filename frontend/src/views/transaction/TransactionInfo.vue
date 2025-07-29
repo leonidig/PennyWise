@@ -20,6 +20,7 @@ const comment = ref('')
 const wallet = ref(null)
 const currency = ref('')
 
+
 onMounted(async () => {
   try {
     await transactions.fetchTransactions()
@@ -68,6 +69,9 @@ const deleteTransaction = async (id) => {
     error.value = 'Failed to delete transaction. Please try again.'
   }
 }
+
+
+
 </script>
 
 <template>

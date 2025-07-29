@@ -12,6 +12,10 @@ const wallets = useWalletStore()
 const transactions = useTransactionStore()
 const categoryStore = useCategoryStore()
 
+const selectedCategory = ref('')
+const searchQuery = ref('')
+const transaction_type = ref('')
+
 const wallet = computed(() =>
   wallets.balances.find(w => w.id == route.params.id)
 )
@@ -22,13 +26,34 @@ const transactionsList = computed(() =>
     : []
 )
 
-const currencies = computed(() => wallets.currencies)
 
-const categories = computed(() => categoryStore.categories)
+const sortedItems = computed(() =>
+  transactionsList.value.sort((a, b) => new Date(b.date) - new Date(a.date))
+)
 
 const getCategory = (categoryId) => {
   return categories.value?.find(c => c.id === categoryId)
 }
+
+const filteredTransactions = computed(() => {
+  return sortedItems.value.filter((t) => {
+    const category = getCategory(t.category)
+    const matchesCategory = selectedCategory.value
+      ? category?.id === parseInt(selectedCategory.value)
+      : true
+    const matchesSearch = t.comment?.toLowerCase().includes(searchQuery.value.toLowerCase()) || ''
+    if (transaction_type.value === 'Incomes') return category.is_income && matchesCategory && matchesSearch
+    if (transaction_type.value === 'Expenses') return !category.is_income && matchesCategory && matchesSearch
+    return matchesCategory && matchesSearch
+  })
+})
+
+const currencies = computed(() => wallets.currencies)
+
+const categories = computed(() => categoryStore.categories)
+
+
+
 
 const currencyCode = computed(() => {
   if (!wallet.value) return ''
@@ -68,7 +93,6 @@ async function confirmAndDeleteTransaction(id) {
     }
   }
 }
-
 </script>
 
 <template>
@@ -86,9 +110,38 @@ async function confirmAndDeleteTransaction(id) {
     </button>
 
     <h2>Wallet Transactions</h2>
+
+      <div class="filter-controls" v-if='sortedItems.length'>
+        <select v-model="selectedCategory">
+          <option value="">All Categories</option>
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
+        </select>
+        <input v-model="searchQuery" placeholder="Search by comment..." />
+        <div class="transactions-header">
+          <button
+            :class="['filter-btn', { active: transaction_type === 'All' }]"
+            @click="transaction_type = 'All'"
+          >All</button>
+          <button
+            :class="['filter-btn', { active: transaction_type === 'Incomes' }]"
+            @click="transaction_type = 'Incomes'"
+          >Incomes</button>
+          <button
+            :class="['filter-btn', { active: transaction_type === 'Expenses' }]"
+            @click="transaction_type = 'Expenses'"
+          >Expenses</button>
+          </div>
+          </div>
+
     <div class="transactions-list grid-4-cols">
       <div
-        v-for="transaction in transactionsList"
+        v-for="transaction in filteredTransactions"
         :key="transaction.id"
         class="transaction-item"
       >
@@ -121,8 +174,10 @@ async function confirmAndDeleteTransaction(id) {
         </button>
       </div>
     </div>
+
     <button @click="router.push('/transactions/add')">Add New Transaction</button>
   </div>
+
   <div v-else>
     <p>Loading wallet information...</p>
   </div>
@@ -143,7 +198,7 @@ async function confirmAndDeleteTransaction(id) {
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .wallet-info-container {
-  max-width: 600px;
+  max-width: none;
   margin: 2rem auto;
   padding: 1rem;
   background: #fff;
@@ -171,5 +226,19 @@ button {
 button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.filter-controls {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-controls input,
+.filter-controls select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 </style>

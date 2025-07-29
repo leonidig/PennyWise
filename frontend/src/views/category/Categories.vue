@@ -67,7 +67,7 @@ onMounted(() => {
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .categories-container {
-  max-width: 600px;
+  max-width: none;
   margin: 20px auto;
   font-family: Arial, sans-serif;
   padding: 15px;

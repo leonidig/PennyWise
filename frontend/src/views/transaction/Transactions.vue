@@ -18,6 +18,28 @@ const balances = computed(() => walletsStore.balances)
 const currencies = computed(() => walletsStore.currencies)
 const transactionsList = computed(() => transactionsStore.transactions)
 
+const selectedCategory = ref('')
+const searchQuery = ref('')
+const transaction_type = ref('')
+
+const sortedItems = computed(() =>
+  [...transactionsList.value].sort((a, b) => new Date(b.date) - new Date(a.date))
+)
+
+const filteredTransactions = computed(() => {
+  return sortedItems.value.filter((t) => {
+    const category = getCategory(t.category)
+    const matchesCategory = selectedCategory.value
+      ? category?.id === parseInt(selectedCategory.value)
+      : true
+    const matchesSearch = t.comment?.toLowerCase().includes(searchQuery.value.toLowerCase()) || ''
+    if (transaction_type.value === 'Incomes') return category.is_income && matchesCategory && matchesSearch
+    if (transaction_type.value === 'Expenses') return !category.is_income && matchesCategory && matchesSearch
+    return matchesCategory && matchesSearch
+  })
+})
+
+
 async function fetchAll() {
   loading.value = true
   error.value = null
@@ -47,7 +69,6 @@ const getWallet = (walletId) => {
   return balances.value.find(w => w.id === walletId)
 }
 
-
 const getCurrencyCode = (walletId) => {
   const wallet = getWallet(walletId)
   if (!wallet) return ''
@@ -71,35 +92,67 @@ const deleteTransaction = async (id) => {
     <p v-if="error" class="error">{{ error }}</p>
     <p v-if="loading">Loading transactions...</p>
 
-    <div v-if="!loading && !error" class="transactions-list grid-4-cols">
-      <div v-for="transaction in transactionsList" :key="transaction.id" class="transaction-item">
-        <router-link :to="`/transactions/${transaction.id}`" class="transaction-link">
-          <p :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
-            {{ getCategory(transaction.category)?.name || 'Unknown' }}
-          </p>
-          <p class="badge" :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
-            Amount: {{ transaction.amount }} {{ getCurrencyCode(transaction.wallet) }}
-          </p>
-        </router-link>
-        <h3>
-          Wallet: {{ getWallet(transaction.wallet)?.name || 'Unknown Wallet' }}
-          ({{ getWallet(transaction.wallet)?.balance ?? '-' }} {{ getCurrencyCode(transaction.wallet) }})
-        </h3>
-        <p>Comment: {{ transaction.comment || 'No comment' }}</p>
-        <p class="transaction-date">
-              {{ new Date(transaction.created_at).toLocaleString('en-US', {
-                weekday: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              }) }}
+    <div v-if="!loading && !error">
+      <div class="filter-controls">
+        <select v-model="selectedCategory">
+          <option value="">All Categories</option>
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
+        </select>
+        <input v-model="searchQuery" placeholder="Search by comment..." />
+        <div class="transactions-header">
+          <button
+            :class="['filter-btn', { active: transaction_type === 'All' }]"
+            @click="transaction_type = 'All'"
+          >All</button>
+          <button
+            :class="['filter-btn', { active: transaction_type === 'Incomes' }]"
+            @click="transaction_type = 'Incomes'"
+          >Incomes</button>
+          <button
+            :class="['filter-btn', { active: transaction_type === 'Expenses' }]"
+            @click="transaction_type = 'Expenses'"
+          >Expenses</button>
+          </div>
+          </div>
+
+
+      <div class="transactions-list grid-4-cols">
+        <div v-for="transaction in filteredTransactions" :key="transaction.id" class="transaction-item">
+          <router-link :to="`/transactions/${transaction.id}`" class="transaction-link">
+            <p :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
+              {{ getCategory(transaction.category)?.name || 'Unknown' }}
             </p>
-        <button @click="router.push(`/transactions/${transaction.id}/edit`)">Edit</button>
-        <button @click="deleteTransaction(transaction.id)">Delete</button>
+            <p class="badge" :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
+              Amount: {{ transaction.amount }} {{ getCurrencyCode(transaction.wallet) }}
+            </p>
+          </router-link>
+          <h3>
+            Wallet: {{ getWallet(transaction.wallet)?.name || 'Unknown Wallet' }}
+            ({{ getWallet(transaction.wallet)?.balance ?? '-' }} {{ getCurrencyCode(transaction.wallet) }})
+          </h3>
+          <p>Comment: {{ transaction.comment || 'No comment' }}</p>
+          <p class="transaction-date">
+            {{ new Date(transaction.created_at).toLocaleString('en-US', {
+              weekday: 'short',
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }) }}
+          </p>
+          <button @click="router.push(`/transactions/${transaction.id}/edit`)">Edit</button>
+          <button @click="deleteTransaction(transaction.id)">Delete</button>
+        </div>
       </div>
     </div>
+
     <button @click="router.push('/transactions/add')" class="add-btn">Add New Transaction</button>
   </div>
 </template>
@@ -161,5 +214,19 @@ button:hover {
   color: red;
   font-weight: 600;
   margin-bottom: 15px;
+}
+
+.filter-controls {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-controls input,
+.filter-controls select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 </style>
