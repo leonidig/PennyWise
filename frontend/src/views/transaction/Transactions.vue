@@ -172,9 +172,12 @@ const deleteTransaction = async (id) => {
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .transactions-container {
-  margin: 20px auto;
-  padding: 15px 20px;
-  font-family: Arial, sans-serif;
+  /* display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem; */
+  padding: 0.5rem;
+  width: 1000px;
+  box-sizing: border-box;
 }
 
 .transaction-link {

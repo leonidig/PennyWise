@@ -191,15 +191,13 @@ async function confirmAndDeleteTransaction(id) {
 }
 
 .transaction-item {
-  padding: 16px;
+  padding: 1rem;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: #f9f9f9;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .wallet-info-container {
-  max-width: none;
-  margin: 2rem auto;
   padding: 1rem;
   background: #fff;
   border-radius: 12px;
@@ -207,11 +205,12 @@ async function confirmAndDeleteTransaction(id) {
 }
 
 .transactions-list {
-  margin-top: 1rem;
-}
-
-.transaction-item p {
-  margin: 0.25rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 button {

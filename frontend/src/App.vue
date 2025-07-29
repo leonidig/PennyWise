@@ -7,13 +7,14 @@ const hideNavbarOn = ['/login', '/register']
 </script>
 
 <template>
-  <div class="min-h-screen bg-red-50 text-red-900 font-sans">
+  <div class="bg-red-50 text-red-900 font-sans w-full min-h-screen">
     <Navbar v-if="!hideNavbarOn.includes(route.path)" />
-    <main class="px-4 py-6 w-full">
+    <main class="main-content">
       <router-view />
     </main>
   </div>
 </template>
+
 
 <style>
 body {
@@ -21,6 +22,13 @@ body {
   font-family: 'Inter', 'Segoe UI', sans-serif;
   background-color: #FEF2F2;
   color: #7F1D1D;
+}
+
+.main-content {
+  padding: 6rem 2rem 2rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 ::-webkit-scrollbar {

@@ -46,7 +46,6 @@ onMounted(async () => {
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 10px rgba(220, 38, 38, 0.1);
-  max-width: 400px;
   width: 100%;
   text-align: center;
 }

@@ -135,8 +135,6 @@ async function addTransaction() {
 
 <style scoped>
 .add-transaction-container {
-  max-width: 500px;
-  margin: 20px auto;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;

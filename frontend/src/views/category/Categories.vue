@@ -67,13 +67,13 @@ onMounted(() => {
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .categories-container {
-  max-width: none;
-  margin: 20px auto;
   font-family: Arial, sans-serif;
-  padding: 15px;
   background: #fafafa;
   border-radius: 8px;
   border: 1px solid #ddd;
+  width: 1000px;
+  padding: 0 2rem;
+  box-sizing: border-box;
 }
 
 h1 {
@@ -86,6 +86,10 @@ h1 {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
+  width: 100%;
+  padding: 0 2rem;
+  box-sizing: border-box;
+
 }
 
 .category-item h2 {
@@ -135,9 +139,9 @@ button {
   background-color: #1976d2;
   color: white;
   width: 100%;
-  max-width: 200px;
   display: block;
   margin: 0 auto;
+  justify-self: center;
 }
 
 button:hover {

@@ -138,7 +138,6 @@ const getCategory = (categoryId) =>
   border: 2px solid #F87171;
   border-radius: 10px;
   padding: 1.5rem;
-  max-width: 700px;
   margin: 2rem auto;
   color: #7F1D1D;
   font-family: 'Segoe UI', sans-serif;

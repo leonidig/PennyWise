@@ -1,5 +1,6 @@
 <template>
   <div class="home-container">
+    <div class="becentre">
     <div class="section-card">
       <h1 class="section-title">Welcome!</h1>
       <h3 class="section-subtitle">Total Balance Worth</h3>
@@ -17,6 +18,7 @@
       <h3 class="section-subtitle">Recent Transactions</h3>
       <RecentTransactions :items="transactionsList" />
     </div>
+  </div>
   </div>
 </template>
 
@@ -111,21 +113,36 @@ const formattedTotalInEUR = computed(() => {
 
 <style scoped>
 .home-container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 2rem 1rem;
-  font-family: 'Segoe UI', sans-serif;
-  color: #7F1D1D;
+  width: 1300px;
+  padding: 0rem 2rem;
+  display: flex;
+  gap: 1.5rem;
+  box-sizing: border-box;
 }
 
+.becentre {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+
+
 .section-card {
+  width: 100%;
   background: #FEF2F2;
   border: 2px solid #F87171;
   border-radius: 12px;
   padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+
 }
+
+
+
 
 .section-title {
   font-size: 2rem;

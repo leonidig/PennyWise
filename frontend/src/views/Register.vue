@@ -76,7 +76,6 @@ async function handleRegister() {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(220, 38, 38, 0.1);
   width: 100%;
-  max-width: 400px;
   text-align: center;
 }
 

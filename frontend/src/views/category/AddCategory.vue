@@ -44,8 +44,6 @@ async function handleAddCategory() {
 
 <style scoped>
 .add-category-container {
-  max-width: 400px;
-  margin: 20px auto;
   font-family: Arial, sans-serif;
   padding: 15px;
   border: 1px solid #ddd;

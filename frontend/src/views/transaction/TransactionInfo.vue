@@ -112,8 +112,6 @@ const deleteTransaction = async (id) => {
 
 <style scoped>
 .transaction-info-container {
-  max-width: 600px;
-  margin: 20px auto;
   padding: 15px 20px;
   border: 1px solid #ddd;
   border-radius: 8px;

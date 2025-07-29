@@ -21,7 +21,7 @@
 
       <ul class="nav-list user-links">
         <li class="dropdown">
-          <button class="dropdown-btn" @click="isDropdownOpen = !isDropdownOpen"> {{ auth.email }} ▾</button>
+          <button class="dropdown-btn" @click="isDropdownOpen = !isDropdownOpen">{{ auth.email }} ▾</button>
           <ul v-if="isDropdownOpen" class="dropdown-menu">
             <li><router-link to="/profile" @click="closeMenu">Profile</router-link></li>
             <li><a href="#" @click.prevent="signOut">Sign Out</a></li>
@@ -67,11 +67,15 @@ function signOut() {
   background-color: #7F1D1D;
   color: white;
   position: fixed;
+  right: 0;
   top: 0;
   left: 0;
-  z-index: 1000;
+  right: 0;
+  z-index: 50;
+  height: 64px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
+
 
 .navbar-brand {
   display: flex;

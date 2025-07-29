@@ -98,8 +98,6 @@ const updateWallet = async () => {
 
 <style scoped>
 .edit-wallet-container {
-  max-width: 400px;
-  margin: 2rem auto;
   padding: 1rem;
   background: #fff;
   border-radius: 12px;

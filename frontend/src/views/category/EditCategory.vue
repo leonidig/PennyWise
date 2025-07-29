@@ -63,8 +63,6 @@ async function handleEditCategory() {
 
 <style scoped>
 .edit-category-container {
-  max-width: 400px;
-  margin: 20px auto;
   padding: 16px;
   background: #fafafa;
   border-radius: 8px;
