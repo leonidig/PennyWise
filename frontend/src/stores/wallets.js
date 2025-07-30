@@ -97,7 +97,10 @@ export const useWalletStore = defineStore( 'wallets', {
             if (wallet.balance < amount) {
               throw new Error('Insufficient funds')
             }
-            wallet.balance = parseFloat((Number(wallet.balance) - Number(amount)).toFixed(2))
+            else {
+              wallet.balance = parseFloat((Number(wallet.balance) - Number(amount)).toFixed(2))
+            }
+
           }
           console.log("Patching wallet balance:", wallet.balance, amount, categoryId)
             try {

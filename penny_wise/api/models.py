@@ -76,11 +76,6 @@ class Wallet(models.Model):
         on_delete=models.CASCADE,
         related_name="wallets"
     )
-    
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['name', 'currency'], name='unique_wallet_name_currency'),
-        ]
 
     def __str__(self):
         return f"Wallet {self.user.email} [{self.currency}]"
