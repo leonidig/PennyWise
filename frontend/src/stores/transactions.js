@@ -40,7 +40,7 @@ export const useTransactionStore = defineStore( 'transactions', {
                     body: JSON.stringify({ wallet: walletId, category:categoryId, amount, comment }),
                 })
                 if (!res.ok) throw new Error('Failed to add transaction')
-                await wallets.patchWalletBalance(walletId, amount, categoryId)
+                await wallets.fetchWallets()
                 await this.fetchTransactions()
             } catch (error) {
                 console.error('Error adding transaction:', error)
