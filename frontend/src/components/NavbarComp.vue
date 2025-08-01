@@ -100,7 +100,7 @@ function signOut() {
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
-  display: none; /* Hidden on desktop */
+  display: none; 
 }
 
 .nav-collapse {
@@ -164,7 +164,7 @@ function signOut() {
   color: white;
 }
 
-/* Responsive Styles */
+
 @media (max-width: 768px) {
   .toggle-btn {
     display: block;

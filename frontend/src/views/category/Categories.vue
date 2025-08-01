@@ -6,7 +6,6 @@ import { useCategoryStore } from '@/stores/categories'
 const router = useRouter()
 const categories = useCategoryStore()
 const error = ref('')
-
 const categoryList = ref([])
 
 async function loadCategories() {
@@ -30,128 +29,183 @@ async function handleDeleteCategory(id) {
   }
 }
 
-onMounted(() => {
-  loadCategories()
-})
+onMounted(loadCategories)
 </script>
 
 <template>
   <div class="categories-container">
-    <h1>Categories</h1>
-    <div v-if="categoryList.length" class="categories-list grid-4-cols">
-      <div v-for="category in categoryList" :key="category.id" class="category-item">
+    <div v-if="categoryList.length" class="grid-4-cols">
+      <div v-for="category in categoryList" :key="category.id" class="category-card">
         <h2>{{ category.name }}</h2>
-        <p>Type: {{ category.is_income ? 'Income' : 'Expense' }}</p>
-        <button @click="router.push(`/categories/edit/${category.id}`)">Edit</button>
-        <button @click="handleDeleteCategory(category.id)">Delete</button>
+        <p class="type-label" :class="category.is_income ? 'income' : 'expense'">
+          {{ category.is_income ? 'Income' : 'Expense' }}
+        </p>
+        <div class="actions">
+          <button @click="router.push(`/categories/edit/${category.id}`)" class="btn-edit">Edit</button>
+          <button @click="handleDeleteCategory(category.id)" class="btn-delete">Delete</button>
+        </div>
       </div>
     </div>
-    <p v-else>No categories found.</p>
-    <button @click="router.push('/categories/add')">Add New Category</button>
+
+    <p v-else class="no-categories">No categories found.</p>
+
+    <div class="add-btn-wrapper">
+      <button @click="router.push('/categories/add')" class="btn-add">+ Add New Category</button>
+    </div>
+
     <p v-if="error" class="error-message">{{ error }}</p>
   </div>
 </template>
 
 <style scoped>
+.categories-container {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
 .grid-4-cols {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
 }
 
-.category-item {
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-.categories-container {
-  font-family: Arial, sans-serif;
-  background: #fafafa;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  width: 1000px;
-  padding: 0 2rem;
-  box-sizing: border-box;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.categories-list {
+.category-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 3.5rem 2.5rem 3rem;
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.2);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  min-height: 260px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.category-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 18px 40px rgba(220, 38, 38, 0.3);
+}
+
+.category-card h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 2.2rem;
+  color: #b91c1c;
+  font-weight: 900;
+}
+
+.type-label {
+  font-weight: 800;
+  font-size: 1.25rem;
+  margin-bottom: 2.5rem;
+  user-select: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.income {
+  color: #15803d;
+}
+
+.expense {
+  color: #dc2626;
+}
+
+
+.actions {
+  margin-top: auto;
+  display: flex;
   gap: 12px;
-  margin-bottom: 20px;
-  width: 100%;
-  padding: 0 2rem;
-  box-sizing: border-box;
-
+  justify-content: flex-start;
 }
 
-.category-item h2 {
-  margin: 0 0 6px 0;
-}
-
-.category-item p {
-  margin: 0;
-  font-weight: 600;
-}
-
-.category-item button {
-  width: 80px;
-  margin-top: 8px;
-  padding: 6px;
+.actions button {
+  padding: 0.7rem 1.2rem;
+  border-radius: 12px;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.category-item button:first-of-type {
-  background-color: #1976d2;
-  color: white;
-  margin-right: 8px;
-}
-
-.category-item button:first-of-type:hover {
-  background-color: #1565c0;
-}
-
-.category-item button:last-of-type {
-  background-color: #d32f2f;
-  color: white;
-}
-
-.category-item button:last-of-type:hover {
-  background-color: #b71c1c;
-}
-
-button {
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
   font-weight: 700;
-  background-color: #1976d2;
+  font-size: 1.1rem;
+  cursor: pointer;
   color: white;
-  width: 100%;
-  display: block;
-  margin: 0 auto;
-  justify-self: center;
+  transition: background-color 0.3s ease, box-shadow 0.25s ease;
+  user-select: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  min-width: 90px;
+  text-align: center;
 }
 
-button:hover {
-  background-color: #1565c0;
+.actions button:focus-visible {
+  outline: 3px solid #fca5a5;
+  outline-offset: 2px;
+}
+
+.btn-edit {
+  background-color: #2563eb;
+  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.5);
+}
+
+.btn-edit:hover {
+  background-color: #1e40af;
+  box-shadow: 0 8px 22px rgba(30, 64, 175, 0.75);
+}
+
+.btn-delete {
+  background-color: #dc2626;
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.5);
+}
+
+.btn-delete:hover {
+  background-color: #991b1b;
+  box-shadow: 0 8px 22px rgba(153, 27, 27, 0.75);
+}
+
+.btn-add {
+  display: block;
+  max-width: 320px;
+  margin: 4rem auto 0 auto;
+  padding: 1.4rem 3rem;
+  background-color: #dc2626;
+  color: white;
+  font-weight: 900;
+  font-size: 1.5rem;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  user-select: none;
+  box-shadow: 0 8px 30px rgba(220, 38, 38, 0.55);
+}
+
+.btn-add:hover {
+  background-color: #991b1b;
+  box-shadow: 0 12px 40px rgba(153, 27, 27, 0.8);
+}
+
+.no-categories {
+  text-align: center;
+  color: #7f1d1d;
+  font-weight: 700;
+  margin-top: 5rem;
+  font-size: 1.5rem;
 }
 
 .error-message {
-  color: red;
-  margin-top: 10px;
-  font-weight: 600;
+  margin-top: 3rem;
   text-align: center;
+  color: #b91c1c;
+  font-weight: 900;
+  font-size: 1.25rem;
 }
+
+.add-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+}
+
+
 </style>

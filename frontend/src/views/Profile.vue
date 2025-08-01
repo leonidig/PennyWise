@@ -7,7 +7,7 @@ onMounted(async () => {
   await auth.fetchUser()
 })
 
-// const passwordVisible = ref(false)
+
 </script>
 
 <template>
@@ -18,13 +18,6 @@ onMounted(async () => {
       <div class="profile-info">
         <p><strong>Email:</strong> {{ auth.email || 'Loading...' }}</p>
 
-        <!--
-        <p v-if="passwordVisible"><strong>Password:</strong> {{ auth.password }}</p>
-        <p v-else><strong>Password:</strong> ********</p>
-        <button class="toggle-password-btn" @click="passwordVisible = !passwordVisible">
-          {{ passwordVisible ? 'Hide Password' : 'Show Password' }}
-        </button>
-        -->
       </div>
     </div>
   </div>

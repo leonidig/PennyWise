@@ -9,6 +9,6 @@ class WalletViewSet(viewsets.ModelViewSet):
     serializer_class = WalletSerializer
     permission_classes = [IsAuthenticated]
     swagger_schema_fields = {"tags": ["Wallet"]}
-
+ 
     def get_queryset(self):
         return Wallet.objects.filter(user=self.request.user)

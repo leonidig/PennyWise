@@ -3,6 +3,7 @@ from ..models import Transaction
 from ..serializers.transaction_serializer import TransactionSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Sum
+from django.db import transaction
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
@@ -23,8 +24,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, instance):
         wallet = instance.wallet
-        instance.delete()
-        self.update_wallet_balance(wallet)
+        with transaction.atomic():
+            instance.delete()
+            self.update_wallet_balance(wallet)
 
     def update_wallet_balance(self, wallet):
         income = wallet.transactions.filter(category__is_income=True).aggregate(total=Sum('amount'))['total'] or 0

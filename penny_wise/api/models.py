@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    is_income = models.BooleanField()
+    is_income = models.BooleanField(default=True)
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

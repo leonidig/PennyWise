@@ -15,7 +15,7 @@ onMounted(async () => {
   loading.value = false
 })
 
-// Reactive computed wallet based on route param
+
 const wallet = computed(() =>
   wallets.balances.find(w => w.id == route.params.id)
 )
@@ -25,7 +25,7 @@ const currencies = computed(() => wallets.currencies)
 const newName = ref('')
 const newCurrency = ref(null)
 
-// Initialize form fields when wallet is ready
+
 watch(
   () => wallet.value,
   (w) => {

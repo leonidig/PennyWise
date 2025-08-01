@@ -1,4 +1,75 @@
+<template>
+  <div class="transactions-container">
+    <!-- Фильтры фиксированы под Navbar -->
+    <div class="filter-controls-wrapper">
+      <div class="filter-controls">
+        <select v-model="selectedCategory">
+          <option value="">All Categories</option>
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
+        </select>
+        <input v-model="searchQuery" placeholder="Search by comment..." />
+        <div class="transactions-header">
+          <button
+            :class="['filter-btn', { active: transaction_type === 'All' || transaction_type === '' }]"
+            @click="transaction_type = ''"
+          >All</button>
+          <button
+            :class="['filter-btn', { active: transaction_type === 'Incomes' }]"
+            @click="transaction_type = 'Incomes'"
+          >Incomes</button>
+          <button
+            :class="['filter-btn', { active: transaction_type === 'Expenses' }]"
+            @click="transaction_type = 'Expenses'"
+          >Expenses</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="error" class="error">{{ error }}</div>
+    <p v-if="loading" class="loading">Loading transactions...</p>
+
+    <div v-if="!loading && !error" class="transactions-list grid-4-cols">
+      <div v-for="transaction in filteredTransactions" :key="transaction.id" class="transaction-item">
+        <router-link :to="`/transactions/${transaction.id}`" class="transaction-link">
+          <p :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
+            {{ getCategory(transaction.category)?.name || 'Unknown' }}
+          </p>
+          <p class="badge" :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
+            Amount: {{ transaction.amount }} {{ getCurrencyCode(transaction.wallet) }}
+          </p>
+        </router-link>
+        <h3>
+          Wallet: {{ getWallet(transaction.wallet)?.name || 'Unknown Wallet' }}
+          ({{ getWallet(transaction.wallet)?.balance ?? '-' }} {{ getCurrencyCode(transaction.wallet) }})
+        </h3>
+        <p>Comment: {{ transaction.comment || 'No comment' }}</p>
+        <p class="transaction-date">
+          {{ new Date(transaction.created_at).toLocaleString('en-US', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) }}
+        </p>
+        <button @click="router.push(`/transactions/${transaction.id}/edit`)">Edit</button>
+        <button @click="deleteTransaction(transaction.id)">Delete</button>
+      </div>
+    </div>
+
+    <button @click="router.push('/transactions/add')" class="add-btn">Add New Transaction</button>
+  </div>
+</template>
+
 <script setup>
+// ... оставляю скрипт без изменений (тот же, что и ранее)
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTransactionStore } from '@/stores/transactions'
@@ -23,7 +94,7 @@ const searchQuery = ref('')
 const transaction_type = ref('')
 
 const sortedItems = computed(() =>
-  [...transactionsList.value].sort((a, b) => new Date(b.date) - new Date(a.date))
+  [...transactionsList.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 )
 
 const filteredTransactions = computed(() => {
@@ -32,13 +103,12 @@ const filteredTransactions = computed(() => {
     const matchesCategory = selectedCategory.value
       ? category?.id === parseInt(selectedCategory.value)
       : true
-    const matchesSearch = t.comment?.toLowerCase().includes(searchQuery.value.toLowerCase()) || ''
-    if (transaction_type.value === 'Incomes') return category.is_income && matchesCategory && matchesSearch
-    if (transaction_type.value === 'Expenses') return !category.is_income && matchesCategory && matchesSearch
+    const matchesSearch = t.comment?.toLowerCase().includes(searchQuery.value.toLowerCase()) ?? true
+    if (transaction_type.value === 'Incomes') return category?.is_income && matchesCategory && matchesSearch
+    if (transaction_type.value === 'Expenses') return !category?.is_income && matchesCategory && matchesSearch
     return matchesCategory && matchesSearch
   })
 })
-
 
 async function fetchAll() {
   loading.value = true
@@ -86,82 +156,12 @@ const deleteTransaction = async (id) => {
 }
 </script>
 
-<template>
-  <div class="transactions-container">
-    <h1>Transactions</h1>
-    <p v-if="error" class="error">{{ error }}</p>
-    <p v-if="loading">Loading transactions...</p>
-
-    <div v-if="!loading && !error">
-      <div class="filter-controls">
-        <select v-model="selectedCategory">
-          <option value="">All Categories</option>
-          <option
-            v-for="category in categories"
-            :key="category.id"
-            :value="category.id"
-          >
-            {{ category.name }}
-          </option>
-        </select>
-        <input v-model="searchQuery" placeholder="Search by comment..." />
-        <div class="transactions-header">
-          <button
-            :class="['filter-btn', { active: transaction_type === 'All' }]"
-            @click="transaction_type = 'All'"
-          >All</button>
-          <button
-            :class="['filter-btn', { active: transaction_type === 'Incomes' }]"
-            @click="transaction_type = 'Incomes'"
-          >Incomes</button>
-          <button
-            :class="['filter-btn', { active: transaction_type === 'Expenses' }]"
-            @click="transaction_type = 'Expenses'"
-          >Expenses</button>
-          </div>
-          </div>
-
-
-      <div class="transactions-list grid-4-cols">
-        <div v-for="transaction in filteredTransactions" :key="transaction.id" class="transaction-item">
-          <router-link :to="`/transactions/${transaction.id}`" class="transaction-link">
-            <p :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
-              {{ getCategory(transaction.category)?.name || 'Unknown' }}
-            </p>
-            <p class="badge" :style="{ color: getCategory(transaction.category)?.is_income ? 'green' : 'red' }">
-              Amount: {{ transaction.amount }} {{ getCurrencyCode(transaction.wallet) }}
-            </p>
-          </router-link>
-          <h3>
-            Wallet: {{ getWallet(transaction.wallet)?.name || 'Unknown Wallet' }}
-            ({{ getWallet(transaction.wallet)?.balance ?? '-' }} {{ getCurrencyCode(transaction.wallet) }})
-          </h3>
-          <p>Comment: {{ transaction.comment || 'No comment' }}</p>
-          <p class="transaction-date">
-            {{ new Date(transaction.created_at).toLocaleString('en-US', {
-              weekday: 'short',
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            }) }}
-          </p>
-          <button @click="router.push(`/transactions/${transaction.id}/edit`)">Edit</button>
-          <button @click="deleteTransaction(transaction.id)">Delete</button>
-        </div>
-      </div>
-    </div>
-
-    <button @click="router.push('/transactions/add')" class="add-btn">Add New Transaction</button>
-  </div>
-</template>
-
 <style scoped>
 .grid-4-cols {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px;
+  margin-top: 1rem;
 }
 
 .transaction-item {
@@ -171,13 +171,59 @@ const deleteTransaction = async (id) => {
   background-color: #f9f9f9;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
+
 .transactions-container {
-  /* display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem; */
-  padding: 0.5rem;
-  width: 1000px;
-  box-sizing: border-box;
+  margin-left: auto;
+  padding-right: 7rem;
+}
+
+
+.filter-controls-wrapper {
+  position: sticky;
+  top: 6rem; 
+  left: 0;
+  width: 100%;
+  padding: 1rem 0;
+  background-color: #FEF2F2;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.filter-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-controls input,
+.filter-controls select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.transactions-header {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  border: 1px solid #1976d2;
+  background-color: white;
+  color: #1976d2;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  background-color: #1976d2;
+  color: white;
 }
 
 .transaction-link {
@@ -219,17 +265,7 @@ button:hover {
   margin-bottom: 15px;
 }
 
-.filter-controls {
-  margin-bottom: 16px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.filter-controls input,
-.filter-controls select {
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.loading {
+  margin-bottom: 15px;
 }
 </style>

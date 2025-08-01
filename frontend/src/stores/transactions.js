@@ -23,10 +23,6 @@ export const useTransactionStore = defineStore( 'transactions', {
         },
 
 
-
-
-
-
         async addTransaction(walletId, amount, comment, categoryId) {
           const { useWalletStore } = await import('@/stores/wallets.js')
           const wallets = useWalletStore()
@@ -158,31 +154,33 @@ export const useTransactionStore = defineStore( 'transactions', {
 
 
         async deleteTransaction(id) {
-            const { useWalletStore } = await import('@/stores/wallets.js')
-            const wallets = useWalletStore()
-            const transaction = await this.getTransactionById(id)
-            if (!transaction) {
-                console.error('Transaction not found')
-                return
-            }
-            const walletId = transaction.wallet
-            const amount = transaction.amount
-            const categoryId = transaction.category
+          const { useWalletStore } = await import('@/stores/wallets.js')
+          const wallets = useWalletStore()
+          const transaction = await this.getTransactionById(id)
+          if (!transaction) {
+            console.error('Transaction not found')
+            return
+          }
 
-            try {
-                const res = await fetch(`http://localhost:8000/api/transaction/${id}/`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.token}`,
-                    },
-                })
-                if (!res.ok) throw new Error('Failed to delete transaction')
-                await this.fetchTransactions()
-                wallets.revertWalletBalance(walletId, amount, categoryId)
-            } catch (error) {
-                console.error('Error deleting transaction:', error)
+          try {
+            const res = await fetch(`http://localhost:8000/api/transaction/${id}/`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`,
+              },
+            })
+            if (!res.ok) {
+              const errorText = await res.text()
+              console.error('Failed to delete transaction:', res.status, errorText)
+              throw new Error('Failed to delete transaction')
             }
-        },
+            await this.fetchTransactions()
+            await wallets.fetchWallets()
+          } catch (error) {
+            console.error('Error deleting transaction:', error)
+          }
+        }
+
     }
 })

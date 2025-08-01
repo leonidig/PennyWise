@@ -199,7 +199,7 @@ const getCategory = (categoryId) =>
 
 .transaction-category.income,
 .transaction-amount.income {
-  color: #15803D; /* green-700 */
+  color: #15803D;
 }
 
 .transaction-category.expense,
@@ -209,6 +209,6 @@ const getCategory = (categoryId) =>
 
 .transaction-date {
   font-size: 0.8rem;
-  color: #6B7280; /* gray-500 */
+  color: #6B7280;
 }
 </style>

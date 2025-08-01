@@ -27,7 +27,7 @@ async function handleRegister() {
 </script>
 
 <template>
-  <div class="register-container">
+  <div class="register-wrapper">
     <div class="register-card">
       <h1 class="register-title">Register</h1>
 
@@ -53,42 +53,48 @@ async function handleRegister() {
       </form>
 
       <p class="login-msg">
-        Already have an account? <router-link to="/login">Login here</router-link>.
+        Already have an account?
+        <router-link to="/login">Login here</router-link>.
       </p>
     </div>
   </div>
 </template>
 
 <style scoped>
-.register-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fef2f2;
-  padding: 1rem;
+.register-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #fff5f5, #ffe4e6);
+  z-index: 10;
 }
 
 .register-card {
   background-color: #ffffff;
-  border: 2px solid #f87171;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
   width: 100%;
   text-align: center;
+  border: 1px solid #fca5a5;
 }
 
 .register-title {
+  font-size: 2rem;
   color: #dc2626;
-  font-size: 1.75rem;
   margin-bottom: 1.5rem;
+  font-weight: 700;
 }
 
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
   text-align: left;
 }
 
@@ -98,33 +104,36 @@ async function handleRegister() {
 }
 
 label {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   color: #7f1d1d;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 input {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #f87171;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.2s;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
 }
 
 input:focus {
+  outline: none;
   border-color: #dc2626;
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
 }
 
 .register-button {
   padding: 0.75rem;
   background-color: #dc2626;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
 }
 
 .register-button:hover {
@@ -133,18 +142,21 @@ input:focus {
 
 .error-msg {
   margin-top: 0.5rem;
-  color: #dc2626;
-  font-weight: 500;
+  color: #b91c1c;
+  font-weight: 600;
+  text-align: center;
 }
 
 .login-msg {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   font-size: 0.9rem;
   color: #7f1d1d;
+  text-align: center;
 }
 
 .login-msg a {
   color: #dc2626;
   text-decoration: underline;
+  font-weight: 500;
 }
 </style>

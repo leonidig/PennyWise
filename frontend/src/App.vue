@@ -1,3 +1,14 @@
+<template>
+  <div class="layout-wrapper">
+    <Navbar v-if="!hideNavbarOn.includes(route.path)" />
+    <main
+      :class="['main-content', { 'with-navbar': !hideNavbarOn.includes(route.path) }]"
+    >
+      <router-view />
+    </main>
+  </div>
+</template>
+
 <script setup>
 import Navbar from '@/components/NavbarComp.vue'
 import { useRoute } from 'vue-router'
@@ -6,29 +17,36 @@ const route = useRoute()
 const hideNavbarOn = ['/login', '/register']
 </script>
 
-<template>
-  <div class="bg-red-50 text-red-900 font-sans w-full min-h-screen">
-    <Navbar v-if="!hideNavbarOn.includes(route.path)" />
-    <main class="main-content">
-      <router-view />
-    </main>
-  </div>
-</template>
-
-
 <style>
-body {
+body, html {
   margin: 0;
+  height: 100%;
   font-family: 'Inter', 'Segoe UI', sans-serif;
   background-color: #FEF2F2;
   color: #7F1D1D;
 }
 
-.main-content {
-  padding: 6rem 2rem 2rem;
+.layout-wrapper {
+  min-height: 100vh;
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: #FEF2F2;
+}
+
+.main-content {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  min-height: calc(100vh - 0px);
+}
+
+.main-content.with-navbar {
+  padding-top: 6rem;
+  min-height: calc(100vh - 6rem);
 }
 
 ::-webkit-scrollbar {

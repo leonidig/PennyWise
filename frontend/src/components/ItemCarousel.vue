@@ -97,7 +97,7 @@ function prevItem() {
 
 .wallet-empty {
   text-align: center;
-  color: #9CA3AF; /* gray-400 */
+  color: #9CA3AF;
   font-style: italic;
   margin-bottom: 16px;
 }
@@ -120,7 +120,7 @@ function prevItem() {
 }
 
 .nav-btn:disabled {
-  background-color: #FECACA; /* red-200 */
+  background-color: #FECACA;
   cursor: not-allowed;
 }
 

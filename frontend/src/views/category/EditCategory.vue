@@ -43,79 +43,143 @@ async function handleEditCategory() {
 </script>
 
 <template>
-  <div class="edit-category-container">
-    <h1>Edit Category</h1>
-    <form @submit.prevent="handleEditCategory">
-      <div class="form-group">
-        <label for="name">Category Name:</label>
-        <input type="text" id="name" v-model="newCategoryName" required />
-      </div>
-      <div class="form-group">
-        <label for="isIncome">Is Income:</label>
-        <input type="checkbox" id="isIncome" v-model="newIsIncome" />
-      </div>
-      <button type="submit">Update Category</button>
-    </form>
-    <p v-if="error" style="color: red;">{{ error }}</p>
-    <p>Go back to <router-link to="/categories">Categories</router-link>.</p>
+  <div class="edit-wrapper">
+    <div class="edit-card">
+      <h1 class="edit-title">Edit Category</h1>
+
+      <form @submit.prevent="handleEditCategory" class="edit-form">
+        <div class="form-group">
+          <label for="name">Category Name</label>
+          <input type="text" id="name" v-model="newCategoryName" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="isIncome" v-model="newIsIncome" />
+          <label for="isIncome">Income Category</label>
+        </div>
+
+        <button type="submit">Save Changes</button>
+      </form>
+
+      <p v-if="error" class="error">{{ error }}</p>
+      <p class="back-link">
+        ← <router-link to="/categories">Back to Categories</router-link>
+      </p>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.edit-category-container {
-  padding: 16px;
-  background: #fafafa;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-family: Arial, sans-serif;
+.edit-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #fff5f5, #ffe4e6);
+  z-index: 1000;
 }
 
-h1 {
+.edit-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 3rem 2.5rem;
+  width: 100%;
   text-align: center;
-  margin-bottom: 16px;
+  border: 1px solid #fca5a5;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.edit-title {
+  font-size: 2rem;
+  color: #dc2626;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
 }
 
 .form-group {
-  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
 }
 
 label {
-  display: block;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 0.5rem;
+  color: #7f1d1d;
 }
 
 input[type="text"] {
-  width: 100%;
-  padding: 8px;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff8f8;
+  transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #dc2626;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 input[type="checkbox"] {
   transform: scale(1.2);
-  margin-left: 8px;
+  accent-color: #dc2626;
 }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #1976d2;
-  color: white;
+button[type="submit"] {
+  padding: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
+  color: white;
+  background-color: #dc2626;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 1rem;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
 }
 
-button:hover {
-  background-color: #1565c0;
+button[type="submit"]:hover {
+  background-color: #991b1b;
+  box-shadow: 0 10px 30px rgba(153, 27, 27, 0.5);
 }
 
-p {
-  margin-top: 16px;
+.error {
+  color: #dc2626;
   text-align: center;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.back-link {
+  text-align: center;
+  margin-top: 2rem;
+  font-weight: 500;
+}
+
+.back-link a {
+  color: #991b1b;
+  text-decoration: underline;
 }
 </style>

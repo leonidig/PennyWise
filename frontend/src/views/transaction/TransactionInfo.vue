@@ -17,9 +17,10 @@ const amount = ref('')
 const categoryId = ref(null)
 const walletId = ref(null)
 const comment = ref('')
-const wallet = ref(null)
+const wallet = computed(() => {
+  return wallets.balances.find(w => w.id === walletId.value)
+})
 const currency = ref('')
-
 
 onMounted(async () => {
   try {
@@ -63,60 +64,76 @@ const deleteTransaction = async (id) => {
   try {
     await transactions.deleteTransaction(id)
     await transactions.fetchTransactions()
+    await wallets.fetchWallets()
     router.push('/transactions')
   } catch (err) {
     console.error('Error deleting transaction:', err)
     error.value = 'Failed to delete transaction. Please try again.'
   }
 }
-
-
-
 </script>
 
 <template>
-  <div class="transaction-info-container">
-    <h1>Transaction Details</h1>
+  <div class="page-wrapper">
+    <div class="transaction-info-container">
+      <h1>Transaction Details</h1>
 
-    <div v-if="error" class="error">{{ error }}</div>
+      <div v-if="error" class="error">{{ error }}</div>
 
-    <div v-else>
-      <h2>Transaction ID: {{ route.params.id }}</h2>
-      <h3>Date: {{ transaction ? new Date(transaction.created_at).toLocaleDateString('en-US', {
-                weekday: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              }) : 'Loading...' }}
-              </h3>
-      <h4>Wallet: {{ wallet?.name }} ({{ wallet?.balance }} {{ currency }})</h4>
+      <div v-else>
+        <h2>Transaction ID: {{ route.params.id }}</h2>
+        <h3>Date:
+          {{
+            transaction
+              ? new Date(transaction.created_at).toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              : 'Loading...'
+          }}
+        </h3>
+        <h4>Wallet: {{ wallet?.name }} ({{ wallet?.balance }} {{ currency }})</h4>
 
-      <div class="transaction-details">
-        <p :style="{ color: getCategory(categoryId)?.is_income ? 'green' : 'red' }">
-          Category: {{ getCategory(categoryId)?.name || 'Unknown' }}
-        </p>
-        <p class="badge" :style="{ color: getCategory(categoryId)?.is_income ? 'green' : 'red' }">
-          Amount: {{ amount }} {{ currency }}
-        </p>
-        <p>Comment: {{ comment || 'No comment provided' }}</p>
+        <div class="transaction-details">
+          <p :style="{ color: getCategory(categoryId)?.is_income ? 'green' : 'red' }">
+            Category: {{ getCategory(categoryId)?.name || 'Unknown' }}
+          </p>
+          <p class="badge" :style="{ color: getCategory(categoryId)?.is_income ? 'green' : 'red' }">
+            Amount: {{ amount }} {{ currency }}
+          </p>
+          <p>Comment: {{ comment || 'No comment provided' }}</p>
+        </div>
+
+        <button @click="router.push(`/transactions/${route.params.id}/edit`)">Edit Transaction</button>
+        <button @click="deleteTransaction(route.params.id)">Delete</button>
+        <button @click="router.push('/transactions')">Back to Transactions</button>
       </div>
-
-      <button @click="router.push(`/transactions/${route.params.id}/edit`)">Edit Transaction</button>
-      <button @click="deleteTransaction(route.params.id)">Delete</button>
-      <button @click="router.push('/transactions')">Back to Transactions</button>
     </div>
   </div>
 </template>
 
 <style scoped>
+.page-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
 .transaction-info-container {
+  max-width: 600px;
+  margin: 0 auto;
   padding: 15px 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #fff;
   font-family: Arial, sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .transaction-info-container h1 {
