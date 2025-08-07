@@ -6,3 +6,4 @@ class CurrencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Currency
         fields = '__all__'
+        read_only_fields = ['user']

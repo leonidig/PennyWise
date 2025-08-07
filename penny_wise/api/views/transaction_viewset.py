@@ -1,16 +1,35 @@
 from rest_framework import viewsets
 from ..models import Transaction
 from ..serializers.transaction_serializer import TransactionSerializer
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Sum
+from django.db import transaction
 
-@extend_schema_view(
-    list=extend_schema(tags=['Transaction']),
-    retrieve=extend_schema(tags=['Transaction']),
-    create=extend_schema(tags=['Transaction']),
-    update=extend_schema(tags=['Transaction']),
-    partial_update=extend_schema(tags=['Transaction']),
-    destroy=extend_schema(tags=['Transaction']),
-)
+
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Transaction.objects.filter(wallet__user=self.request.user)
+
+    def perform_create(self, serializer):
+        transaction = serializer.save()
+        self.update_wallet_balance(transaction.wallet)
+
+    def perform_update(self, serializer):
+        transaction = serializer.save()
+        self.update_wallet_balance(transaction.wallet)
+
+    def perform_destroy(self, instance):
+        wallet = instance.wallet
+        with transaction.atomic():
+            instance.delete()
+            self.update_wallet_balance(wallet)
+
+    def update_wallet_balance(self, wallet):
+        income = wallet.transactions.filter(category__is_income=True).aggregate(total=Sum('amount'))['total'] or 0
+        expense = wallet.transactions.filter(category__is_income=False).aggregate(total=Sum('amount'))['total'] or 0
+        wallet.balance = income - expense
+        wallet.save()
